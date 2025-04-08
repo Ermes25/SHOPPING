@@ -1,0 +1,59 @@
+﻿@page "/Bonus"
+@using Radzen
+@using Radzen.Blazor
+@using Models
+@inject Controllers.ControlacController controlacController
+
+<h2>CONTROL DE CATEGORIAS</h2>
+
+<RadzenDataGrid AllowFiltering="true"
+                AllowColumnResize="true"
+                AllowSorting="true"
+                PageSize="10"
+                AllowPaging="true"
+                ShowPagingSummary="true"
+                Data="Data"
+                TItem="vControlac"
+                ColumnWidth="300px"
+                FilterMode="FilterMode.Advanced">
+    <Columns>
+        <!-- Columna para el nombre de la categoría -->
+        <RadzenDataGridColumn Property="@nameof(vControlac.categoria)"
+                              Title="Categoría"
+                              Width="200px" />
+
+        <!-- Columna para la cantidad de artículos -->
+        <RadzenDataGridColumn Property="@nameof(vControlac.cantidadArticulos)"
+                              Title="Cantidad Artículos"
+                              Width="160px"
+                              TextAlign="TextAlign.Center" />
+
+        <!-- Columna para el total del precio -->
+        <RadzenDataGridColumn Property="@nameof(vControlac.totalPrecio)"
+                              Title="Total Precio"
+                              FormatString="{0:C}"
+                              Width="160px"
+                              TextAlign="TextAlign.Center" />
+    </Columns>
+</RadzenDataGrid>
+
+
+
+
+@code {
+    public RadzenDataGrid<vControlac>? Tabla { get; set; }
+    public List<vControlac>? Data { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        await cargarGrid();
+    }
+
+    private async Task cargarGrid()
+    {
+        // Obtener las categorías desde el controlador
+        Data = await controlacController.GetControlacs(); // Asegúrate de tener el controlador correcto
+        StateHasChanged();
+    }
+}
