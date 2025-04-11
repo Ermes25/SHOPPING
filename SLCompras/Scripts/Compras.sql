@@ -50,6 +50,17 @@ FROM Articulos a
 LEFT JOIN Categorias c ON a.idCategoria = c.idCategoria;
 GO
 
+--CREATE VIEW vControlArticulos AS
+--SELECT 
+--    A.nombreArticulo,
+--    C.nombre ,
+--    A.cantidad ,
+--    A.precio ,
+--    (A.cantidad * A.precio) AS PrecioTotal
+--FROM Articulos A
+--LEFT JOIN Categorias C ON A.idCategoria = C.idCategoria
+--WHERE A.activo = 1;  -- Opcional: solo artículos activos
+
 
 
 INSERT INTO Categorias (nombre)

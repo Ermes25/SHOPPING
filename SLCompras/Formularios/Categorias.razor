@@ -34,7 +34,7 @@
         <RadzenButton Disabled="@(!Agregar)" ButtonStyle="ButtonStyle.Success" Icon="add_circle" Text="Agregar" Click="@InsertRow" />
     </HeaderTemplate>
     <Columns>
-        <RadzenDataGridColumn Property="@nameof(Categoria.nombre)" Title="Nombre de la Categoria">
+        <RadzenDataGridColumn Property="@nameof(Categoria.nombre)" Title="Buscar Categoria">
             <EditTemplate Context="Categoria">
                 <RadzenTextBox @bind-Value=Categoria.nombre></RadzenTextBox>
             </EditTemplate>

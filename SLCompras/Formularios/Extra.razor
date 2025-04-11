@@ -2,58 +2,84 @@
 @using Radzen
 @using Radzen.Blazor
 @using Models
-@inject Controllers.ControlacController controlacController
+@inject Controllers.ControlArticuloController ControlArticulo
 
-<h2>CONTROL DE CATEGORIAS</h2>
+<h2>CONTROL DE ARTICULOS</h2>
 
-<RadzenDataGrid AllowFiltering="true"
-                AllowColumnResize="true"
-                AllowSorting="true"
-                PageSize="10"
+<RadzenDataGrid @ref="Tabla"
+                AllowFiltering="true"
                 AllowPaging="true"
-                ShowPagingSummary="true"
+                AllowSorting="true"
+                AllowColumnResize="true"
+                ColumnWidth="150px"
+                Density="Density.Default"
+                PageSize="5"
+                Responsive="true"
+                TItem="vControlArticulo"
                 Data="Data"
-                TItem="vControlac"
-                ColumnWidth="300px"
-                FilterMode="FilterMode.Advanced">
+                EmptyText="Sin registros para mostrar"
+                ShowPagingSummary="true"
+                PageSizeOptions=@PageSizeOptions
+                PagingSummaryFormat=@PagingSummaryFormat
+                PageSizeText="Registros por página"
+                ClearFilterText="Borrar"
+                ApplyFilterText="Aplicar"
+                FilterText="Filtro"
+                FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                FilterMode="FilterMode.Simple"
+                Page="@(a=>DisableInsert=false)"
+                PageSizeChanged="@(a=>DisableInsert=false)">
+
     <Columns>
-        <!-- Columna para el nombre de la categoría -->
-        <RadzenDataGridColumn Property="@nameof(vControlac.categoria)"
-                              Title="Categoría"
-                              Width="200px" />
-
-        <!-- Columna para la cantidad de artículos -->
-        <RadzenDataGridColumn Property="@nameof(vControlac.cantidadArticulos)"
-                              Title="Cantidad Artículos"
-                              Width="160px"
-                              TextAlign="TextAlign.Center" />
-
-        <!-- Columna para el total del precio -->
-        <RadzenDataGridColumn Property="@nameof(vControlac.totalPrecio)"
-                              Title="Total Precio"
-                              FormatString="{0:C}"
-                              Width="160px"
-                              TextAlign="TextAlign.Center" />
+        <RadzenDataGridColumn Property="@nameof(vControlArticulo.nombreArticulo)" Title="Nombre Artículo" />
+        <RadzenDataGridColumn Property="@nameof(vControlArticulo.nombre)" Title="Nombre Categoría" />
+        <RadzenDataGridColumn Property="@nameof(vControlArticulo.cantidad)" Title="Cantidad" />
+        <RadzenDataGridColumn Property="@nameof(vControlArticulo.precio)" Title="Precio" />
+        <RadzenDataGridColumn Property="@nameof(vControlArticulo.PrecioTotal)" Title="Precio Total" />
     </Columns>
+
 </RadzenDataGrid>
 
+<!-- RadzenCard para mostrar el total de cantidades y precios -->
+<div style="display: flex; justify-content: flex-end; margin-top: 20px;">
+    <RadzenCard Style="width: 200px; margin-right: 20px; padding: 10px; text-align: center; background-color: #f4f4f4; border-radius: 10px;">
+        <h3 style="color: black; font-size: 16px;">Cantidad Total</h3>
+        <p style="font-size: 14px; font-weight: normal; color: black;">@TotalCantidad</p>
+    </RadzenCard>
 
+    <RadzenCard Style="width: 200px; padding: 10px; text-align: center; background-color: #f4f4f4; border-radius: 10px;">
+        <h3 style="color: black; font-size: 16px;">Precio Total</h3>
+        <p style="font-size: 14px; font-weight: normal; color: black;">@TotalPrecio.ToString("C")</p>
+    </RadzenCard>
+</div>
 
 
 @code {
-    public RadzenDataGrid<vControlac>? Tabla { get; set; }
-    public List<vControlac>? Data { get; set; }
+    public RadzenDataGrid<vControlArticulo>? Tabla { get; set; }
+    public List<vControlArticulo>? Data { get; set; }
+    public IEnumerable<int> PageSizeOptions { get; set; } = new[] { 2, 5, 10, 100 };
+    public string PagingSummaryFormat { get; set; } = "Página {0} de {1} (Total {2} Registros)";
+    public bool DisableInsert { get; set; } = false;
+
+    // Variables para los totales
+    public int TotalCantidad { get; set; }
+    public decimal TotalPrecio { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        await base.OnInitializedAsync();
         await cargarGrid();
+        await cargarTotales();
     }
 
     private async Task cargarGrid()
     {
-        // Obtener las categorías desde el controlador
-        Data = await controlacController.GetControlacs(); // Asegúrate de tener el controlador correcto
+        Data = await ControlArticulo.GetControlarticulos();
         StateHasChanged();
+    }
+
+    private async Task cargarTotales()
+    {
+        TotalCantidad = await ControlArticulo.GetTotalCantidad();
+        TotalPrecio = await ControlArticulo.GetTotalPrecio();
     }
 }

@@ -42,7 +42,7 @@ public static class MauiProgram
         //Servicios
         builder.Services.AddScoped<CategoriaController>();
         builder.Services.AddScoped<ArticuloController>();
-        builder.Services.AddScoped<ControlacController>();
+        builder .Services.AddScoped<ControlArticuloController>();
 
 
 #if DEBUG

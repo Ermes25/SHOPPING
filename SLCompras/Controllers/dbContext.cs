@@ -15,6 +15,7 @@ namespace SLCompras.Controllers
         public virtual DbSet<Articulo> Articulos { get; set; }
         public DbSet<vArticulo> vArticulos { get; set; }
         public DbSet<vControlac> vControlacs { get; set; }
+        public DbSet<vControlArticulo> vControlArticulos { get; set; }
         public dbContext(DbContextOptions<dbContext> options) : base(options)
         {
         }
